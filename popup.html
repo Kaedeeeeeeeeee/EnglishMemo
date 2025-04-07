@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>英语单词记忆助手</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      width: 300px;
+      padding: 15px;
+    }
+    h1 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .shortcut {
+      background-color: #f1f3f4;
+      padding: 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+    .button {
+      display: block;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      text-align: center;
+      text-decoration: none;
+    }
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .word-count {
+      background-color: #e8f0fe;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .count-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4285f4;
+      display: block;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>英语单词记忆助手</h1>
+  
+  <p>选中单词或短语，然后：</p>
+  <div class="shortcut">Command+Shift+S (Mac)<br>或 Ctrl+Shift+S (Windows/Linux)</div>
+  <p>或右键单击选中的文本并选择"保存到生词本"</p>
+  
+  <div class="word-count">
+    已保存单词
+    <span id="wordCount" class="count-number">0</span>
+  </div>
+  
+  <a href="#" id="openOptions" class="button">查看我的单词列表</a>
+  
+  <script src="popup.js"></script>
+</body>
+</html> 

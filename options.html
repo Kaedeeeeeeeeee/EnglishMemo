@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>英语单词记忆助手设置</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .card {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    .word-count {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4285f4;
+      margin: 10px 0;
+    }
+    button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #3367d6;
+    }
+    button.danger {
+      background-color: #ea4335;
+    }
+    button.danger:hover {
+      background-color: #d33426;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .success {
+      background-color: #d6f5d6;
+      color: #2e802e;
+    }
+    .error {
+      background-color: #f5d6d6;
+      color: #802e2e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .word-list {
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-top: 15px;
+    }
+    @media (max-width: 768px) {
+      body {
+        width: 95%;
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 15px;
+      }
+      
+      th:nth-child(1), td:nth-child(1) { width: 30%; }
+      th:nth-child(2), td:nth-child(2) { width: 45%; }
+      th:nth-child(3), td:nth-child(3) { width: 25%; }
+    }
+  </style>
+</head>
+<body>
+  <h1>英语单词记忆助手设置</h1>
+  
+  <div class="card">
+    <h2>单词统计</h2>
+    <p>已保存单词数量: <span id="wordCount" class="word-count">0</span></p>
+    
+    <button id="exportCSV">导出为CSV</button>
+    <button id="clearWords" class="danger">清空所有单词</button>
+  </div>
+  
+  <div class="card">
+    <h2>单词列表</h2>
+    <div class="word-list">
+      <table id="wordTable">
+        <thead>
+          <tr>
+            <th>单词</th>
+            <th>来源页面</th>
+            <th>日期</th>
+          </tr>
+        </thead>
+        <tbody id="wordTableBody">
+          <!-- 单词列表将在这里动态生成 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div id="status" class="status"></div>
+  
+  <script src="options.js"></script>
+</body>
+</html> 
