@@ -23,17 +23,27 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 // 保存选中文本的主函数
 async function saveSelectedText() { // Made async
+  console.log('[Debug] saveSelectedText: Function called.'); // <<< ADD THIS
   chrome.tabs.query({active: true, currentWindow: true}, async (tabs) => { // Made async
-    if (tabs.length === 0) return;
+    console.log('[Debug] saveSelectedText: tabs.query callback. Tabs:', tabs); // <<< ADD THIS
+    if (tabs.length === 0) {
+        console.log('[Debug] saveSelectedText: No active tabs found. Returning.'); // <<< ADD THIS
+        return;
+    }
     
     // 检查当前tab是否可以执行content script
+    console.log(`[Debug] saveSelectedText: Attempting executeScript on tabId: ${tabs[0].id}`); // <<< ADD THIS
     chrome.scripting.executeScript({
       target: {tabId: tabs[0].id},
       func: () => true
     }).then(() => {
+      console.log('[Debug] saveSelectedText: executeScript succeeded.'); // <<< ADD THIS
       // 确认可以执行脚本后再发送消息
+      console.log(`[Debug] saveSelectedText: Attempting sendMessage to tabId: ${tabs[0].id}`); // <<< ADD THIS
       chrome.tabs.sendMessage(tabs[0].id, {action: "getSelectedText"}, async (response) => { // Made async
+        console.log('[Debug] saveSelectedText: sendMessage response:', response); // <<< ADD THIS
         if (chrome.runtime.lastError) {
+          console.error("[Debug] saveSelectedText: sendMessage chrome.runtime.lastError:", chrome.runtime.lastError.message); // <<< ADD THIS
           console.error("消息发送错误:", chrome.runtime.lastError.message);
           chrome.action.setBadgeText({text: "×"});
           setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
@@ -95,6 +105,7 @@ async function saveSelectedText() { // Made async
               });
             });
           } catch (error) {
+            console.error("[Debug] saveSelectedText: Error during storage operations:", error); // <<< ADD THIS
             console.error("保存失败:", error);
             chrome.action.setBadgeText({text: "×"});
             setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
@@ -102,6 +113,7 @@ async function saveSelectedText() { // Made async
         }
       });
     }).catch(err => {
+      console.error('[Debug] saveSelectedText: executeScript FAILED. Error:', err); // <<< MODIFIED THIS to log full error
       console.error("无法在当前页面执行脚本:", err);
       chrome.action.setBadgeText({text: "×"});
       setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
