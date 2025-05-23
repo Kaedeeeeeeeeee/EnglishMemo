@@ -49,6 +49,12 @@ function loadWordList() {
       wordCell.textContent = item.word;
       row.appendChild(wordCell);
       
+      // New cell for translation
+      const translationCell = document.createElement('td');
+      // Use item.translation. If it's undefined, null, or empty, display '-'
+      translationCell.textContent = item.translation ? item.translation : '-'; 
+      row.appendChild(translationCell);
+      
       const sourceCell = document.createElement('td');
       const sourceLink = document.createElement('a');
       sourceLink.href = item.url;
@@ -87,7 +93,8 @@ function exportToCSV() {
     });
     
     // 创建CSV内容
-    let csvContent = 'Word,Context,Title,URL,Date\n';
+    // Updated CSV header
+    let csvContent = 'Word,Chinese Meaning,Context,Title,URL,Date\n'; 
     
     wordList.forEach(item => {
       // 处理CSV中的特殊字符
@@ -101,8 +108,10 @@ function exportToCSV() {
         return stringValue;
       };
       
+      // Updated array to include translation
       csvContent += [
         processValue(item.word),
+        processValue(item.translation), // Added translation
         processValue(item.context),
         processValue(item.title),
         processValue(item.url),

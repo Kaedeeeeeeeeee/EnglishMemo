@@ -97,9 +97,11 @@
         padding: 15px;
       }
       
-      th:nth-child(1), td:nth-child(1) { width: 30%; }
-      th:nth-child(2), td:nth-child(2) { width: 45%; }
-      th:nth-child(3), td:nth-child(3) { width: 25%; }
+      /* Adjust for four columns */
+      th:nth-child(1), td:nth-child(1) { width: 25%; } /* 单词 */
+      th:nth-child(2), td:nth-child(2) { width: 25%; } /* 中文意思 */
+      th:nth-child(3), td:nth-child(3) { width: 30%; } /* 来源页面 */
+      th:nth-child(4), td:nth-child(4) { width: 20%; } /* 日期 */
     }
   </style>
 </head>
@@ -121,6 +123,7 @@
         <thead>
           <tr>
             <th>单词</th>
+            <th>中文意思</th> <!-- New Column -->
             <th>来源页面</th>
             <th>日期</th>
           </tr>

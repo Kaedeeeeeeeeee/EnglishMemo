@@ -22,8 +22,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 // 保存选中文本的主函数
-function saveSelectedText() {
-  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+async function saveSelectedText() { // Made async
+  chrome.tabs.query({active: true, currentWindow: true}, async (tabs) => { // Made async
     if (tabs.length === 0) return;
     
     // 检查当前tab是否可以执行content script
@@ -32,7 +32,7 @@ function saveSelectedText() {
       func: () => true
     }).then(() => {
       // 确认可以执行脚本后再发送消息
-      chrome.tabs.sendMessage(tabs[0].id, {action: "getSelectedText"}, (response) => {
+      chrome.tabs.sendMessage(tabs[0].id, {action: "getSelectedText"}, async (response) => { // Made async
         if (chrome.runtime.lastError) {
           console.error("消息发送错误:", chrome.runtime.lastError.message);
           chrome.action.setBadgeText({text: "×"});
@@ -41,6 +41,30 @@ function saveSelectedText() {
         }
         
         if (response && response.text) {
+          let translation = '-'; // Default to placeholder
+          if (response.pageLang === 'en' && response.text) {
+            const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(response.text)}&langpair=en|zh-CN`;
+            try {
+              const fetchResponse = await fetch(apiUrl);
+              const data = await fetchResponse.json();
+              if (data.responseStatus === 200 && data.responseData && data.responseData.translatedText) {
+                translation = data.responseData.translatedText;
+              } else if (data.responseStatus !== 200) {
+                console.warn('MyMemory API error:', data.responseDetails || `Status ${data.responseStatus}`);
+                translation = 'API error'; 
+              } else {
+                // No specific translation found by API, but call was successful
+                translation = '-'; 
+              }
+            } catch (error) {
+              console.error('Error fetching translation:', error);
+              translation = 'Fetch error';
+            }
+          } else if (response.text) {
+            // Word saved from a non-English page, or page language unknown
+            translation = '-'; // Signify no translation attempted/applicable
+          }
+
           try {
             // 获取当前保存的单词列表
             chrome.storage.local.get(['wordList'], (result) => {
@@ -53,7 +77,8 @@ function saveSelectedText() {
                 url: response.url,
                 title: response.title,
                 date: new Date().toLocaleDateString(),
-                timestamp: new Date().getTime() // 添加毫秒级时间戳
+                timestamp: new Date().getTime(), // 添加毫秒级时间戳
+                translation: translation // New field
               });
               
               // 保存更新后的列表

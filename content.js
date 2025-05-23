@@ -6,12 +6,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       // 获取当前页面URL和标题
       const pageUrl = window.location.href;
       const pageTitle = document.title;
+      const pageLang = document.documentElement.lang.split('-')[0];
       
       sendResponse({ 
         text: selectedText, 
         url: pageUrl, 
         title: pageTitle,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        pageLang: pageLang
       });
     } else {
       sendResponse({ error: "没有选中文本" });
