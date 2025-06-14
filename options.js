@@ -44,11 +44,15 @@ function loadWordList() {
     // 填充表格
     wordList.forEach(item => {
       const row = document.createElement('tr');
-      
+
       const wordCell = document.createElement('td');
       wordCell.textContent = item.word;
       row.appendChild(wordCell);
-      
+
+      const translationCell = document.createElement('td');
+      translationCell.textContent = item.translation || '';
+      row.appendChild(translationCell);
+
       const sourceCell = document.createElement('td');
       const sourceLink = document.createElement('a');
       sourceLink.href = item.url;
@@ -56,11 +60,11 @@ function loadWordList() {
       sourceLink.target = '_blank';
       sourceCell.appendChild(sourceLink);
       row.appendChild(sourceCell);
-      
+
       const dateCell = document.createElement('td');
       dateCell.textContent = item.date;
       row.appendChild(dateCell);
-      
+
       wordTableBody.appendChild(row);
     });
   });
@@ -87,7 +91,7 @@ function exportToCSV() {
     });
     
     // 创建CSV内容
-    let csvContent = 'Word,Context,Title,URL,Date\n';
+    let csvContent = 'Word,Translation,Context,Title,URL,Date\n';
     
     wordList.forEach(item => {
       // 处理CSV中的特殊字符
@@ -103,6 +107,7 @@ function exportToCSV() {
       
       csvContent += [
         processValue(item.word),
+        processValue(item.translation),
         processValue(item.context),
         processValue(item.title),
         processValue(item.url),

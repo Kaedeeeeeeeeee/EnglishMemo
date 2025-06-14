@@ -42,30 +42,33 @@ function saveSelectedText() {
         
         if (response && response.text) {
           try {
-            // 获取当前保存的单词列表
-            chrome.storage.local.get(['wordList'], (result) => {
-              const wordList = result.wordList || [];
-              
-              // 添加新单词
-              wordList.push({
-                word: response.text,
-                context: "", // 可以扩展获取上下文
-                url: response.url,
-                title: response.title,
-                date: new Date().toLocaleDateString(),
-                timestamp: new Date().getTime() // 添加毫秒级时间戳
-              });
-              
-              // 保存更新后的列表
-              chrome.storage.local.set({wordList: wordList}, () => {
-                // 显示成功提示
-                chrome.action.setBadgeText({text: "✓"});
-                setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
-                
-                // 发送消息给popup更新单词计数
-                chrome.runtime.sendMessage({
-                  action: "wordAdded", 
-                  count: wordList.length
+            translateWord(response.text).then((translation) => {
+              // 获取当前保存的单词列表
+              chrome.storage.local.get(['wordList'], (result) => {
+                const wordList = result.wordList || [];
+
+                // 添加新单词
+                wordList.push({
+                  word: response.text,
+                  translation: translation,
+                  context: "", // 可以扩展获取上下文
+                  url: response.url,
+                  title: response.title,
+                  date: new Date().toLocaleDateString(),
+                  timestamp: new Date().getTime() // 添加毫秒级时间戳
+                });
+
+                // 保存更新后的列表
+                chrome.storage.local.set({wordList: wordList}, () => {
+                  // 显示成功提示
+                  chrome.action.setBadgeText({text: "✓"});
+                  setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
+
+                  // 发送消息给popup更新单词计数
+                  chrome.runtime.sendMessage({
+                    action: "wordAdded",
+                    count: wordList.length
+                  });
                 });
               });
             });
@@ -78,8 +81,25 @@ function saveSelectedText() {
       });
     }).catch(err => {
       console.error("无法在当前页面执行脚本:", err);
-      chrome.action.setBadgeText({text: "×"});
-      setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
-    });
+  chrome.action.setBadgeText({text: "×"});
+  setTimeout(() => chrome.action.setBadgeText({text: ""}), 2000);
   });
-} 
+  });
+}
+
+// 使用公共翻译接口获取单词翻译
+function translateWord(word) {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-CN`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (data && data.responseData && data.responseData.translatedText) {
+        return data.responseData.translatedText;
+      }
+      return '';
+    })
+    .catch(err => {
+      console.error('Translation error:', err);
+      return '';
+    });
+}
