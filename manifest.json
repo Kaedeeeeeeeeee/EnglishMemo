@@ -4,6 +4,9 @@
   "version": "1.0",
   "description": "选中单词保存到本地便于后续复习",
   "permissions": ["storage", "activeTab", "scripting", "contextMenus", "downloads"],
+  "host_permissions": [
+    "https://api.mymemory.translated.net/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
